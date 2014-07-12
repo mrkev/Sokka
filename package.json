@@ -2,6 +2,7 @@
   "name": "Sokka",
   "version": "0.1.0",
   "description": "The printers module for RedAPI",
+  "repository": "https://github.com/mrkev/printers.git",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
@@ -16,5 +17,10 @@
     "es6-promise": "^1.0.0",
     "jsdom": "^0.11.1",
     "obender": "0.0.1"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "chai-as-promised": "^4.1.1",
+    "mocha": "^1.20.1"
   }
 }
