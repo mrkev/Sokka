@@ -2,8 +2,10 @@
   "name": "sokka",
   "version": "0.1.1",
   "description": "The printers module for RedAPI",
-  "repository": { "type" : "git", 
-                  "url" : "https://github.com/mrkev/printers.git" },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mrkev/printers.git"
+  },
   "main": "sokka.js",
   "scripts": {
     "test": "mocha --compilers coffee:coffee-script/register --reporter nyan"
@@ -15,10 +17,13 @@
   "author": "mrkev",
   "license": "ISC",
   "dependencies": {
+    "cheerio": "^0.19.0",
     "coffee-script": "^1.8.0",
     "es6-promise": "^1.0.0",
-    "jsdom": "^3.1.2",
-    "obender": "0.0.1"
+    "memory-cache": "^0.1.4",
+    "obender": "0.0.1",
+    "request-promise": "^0.4.2",
+    "tabletojson": "^0.2.1"
   },
   "devDependencies": {
     "chai": "^1.9.1",
