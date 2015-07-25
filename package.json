@@ -1,5 +1,5 @@
 {
-  "name": "Sokka",
+  "name": "sokka",
   "version": "0.1.1",
   "description": "The printers module for RedAPI",
   "repository": { "type" : "git", 
