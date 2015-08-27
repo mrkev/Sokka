@@ -11,24 +11,25 @@ describe "Sokka instance", ->
   it "can be loaded without blowing up", ->
     assert.doesNotThrow -> require "../index.coffee"
     expect(require("../index.coffee")).to.exist
-    expect(require("../index.coffee")).to.respondTo "getJSON"
+    expect(require("../index.coffee")).to.respondTo "printers"
+    expect(require("../index.coffee")).to.respondTo "labs"
 
-  netprint = undefined
-  beforeEach -> netprint = require("../index.coffee")
+  sokka = undefined
+  beforeEach -> sokka = require("../index.coffee")
 
-  describe "#getJSON()", ->
+  describe "#printers()", ->
     it "returns non empty data", ->
-      expect(netprint.getJSON()).to.eventually.have.length.above 0
+      expect(sokka.printers()).to.eventually.have.length.above 0
 
     
     # have.property checks for (property, value). Change this.
     # it('returns the data we want', function(){
-    #   return netprint.getJSON().should.eventually.all.have.property(
+    #   return sokka.printers().should.eventually.all.have.property(
     #    'queue_name', 'printer_name', 'printer_model', 'color', 'dpi', 'duplex', 'price_per_page');
     # });
     
     it "returns the data in the types we want", ->
-      expect(netprint.getJSON()).to.eventually.satisfy (data) ->
+      expect(sokka.printers()).to.eventually.satisfy (data) ->
         result = true
         i = data.length - 1
 
