@@ -4,21 +4,8 @@ rp      = require('request-promise')
 tb2json = require('tabletojson')
 csvjson = require('csv-parse');
 
-
-
-# https://mapping.cit.cornell.edu/publiclabs/map/results_as_csv.cfm
-
-###*
-Sokka
-
-query()   : returns a promise to the queried data and resets the timer. The
-data recieved gets stored on cache.
-
-jetJSON() : returns a promise to the most readily available data. If there's
-no cache, same as query(). Else, to cache.
-
-interval  : time in milliseconds between automatic calls of query()
-###
+##
+# General CIT info module
 class Sokka
   
   constructor: (@interval) ->
