@@ -1,9 +1,12 @@
 Promise = require("es6-promise").Promise
-remap   = require("obender").remap
 cheerio = require('cheerio')
 rp      = require('request-promise')
 tb2json = require('tabletojson')
-cache   = require('memory-cache')
+csvjson = require('csv-parse');
+
+
+
+# https://mapping.cit.cornell.edu/publiclabs/map/results_as_csv.cfm
 
 ###*
 Sokka
@@ -19,34 +22,40 @@ interval  : time in milliseconds between automatic calls of query()
 class Sokka
   
   constructor: (@interval) ->
-    @interval ?= 604800000 # One week
-    @url = "https://net-print.cit.cornell.edu/netprintx-cgi/qfeatures.cgi"
+    @url_printers = "https://net-print.cit.cornell.edu/netprintx-cgi/qfeatures.cgi"
+    @url_labs = "https://mapping.cit.cornell.edu/publiclabs/map/results_as_csv.cfm"
   
-  query : -> rp(@url).then (html) ->
+  labs : -> rp(@url_labs).then (csv) -> new Promise (res, rej) ->
+    csvjson csv, (err, output) ->
+      rej err if err
+      res output.map (x) -> {
+        id : parseInt x[0]
+        created : new Date(x[1])
+        updated : new Date(x[2])
+        name : x[3]
+        location : x[5]
+        coordinates : x[6].split(',').map (c) -> (parseFloat c)
+        resources : x[7].split(',')
+      }
+
+  printers : -> rp(@url_printers).then (html) ->
       $    = (cheerio.load html)
       conv = (tb2json.convert $("table").parent().html())[0]
 
       # Reformat data.
-      conv.map (x) ->
-        remap
-          "Queue Name"    : "queue_name"
-          "Printer Name"  : "printer_name"
-          "Printer Model" : "printer_model"
-          "Color" :
-            color : (value) -> value is "Color"
-          "DPI" :
-            dpi : (value) -> parseFloat value
-          "Duplex" :
-            duplex : (value) -> value is "Two-sided"
-          "¢/Pg":
-            price_per_page : (value) -> parseFloat(value) / 100
-        , x
-
-      cache.put "data", conv, @interval
-      return conv
-    
-  getJSON : ->
-    cached = (cache.get "data")
-    if cached is null then @query() else Promise.resolve cached
+      conv.map (x) -> {
+        queue_name : x["Queue Name"]
+        printer_name : x["Printer Name"]
+        printer_model : x["Printer Model"]
+        color : x["Color"] is "Color"
+        dpi : parseFloat x["DPI"]
+        duplex : x["Duplex"] is "Two-sided"
+        price_per_page : (parseFloat x["¢/Pg"]) / 100
+      }
 
 module.exports = new Sokka()
+
+if require.main is module
+  sokka = module.exports
+  (Promise.all [sokka.printers(), sokka.labs()]).then (info) ->
+    console.log info

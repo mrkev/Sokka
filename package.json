@@ -19,9 +19,8 @@
   "dependencies": {
     "cheerio": "^0.19.0",
     "coffee-script": "^1.8.0",
+    "csv-parse": "^1.0.0",
     "es6-promise": "^1.0.0",
-    "memory-cache": "^0.1.4",
-    "obender": "0.0.1",
     "request-promise": "^0.4.2",
     "tabletojson": "^0.2.1"
   },
